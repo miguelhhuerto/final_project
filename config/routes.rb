@@ -5,7 +5,15 @@ Rails.application.routes.draw do
   root "home#index"
   devise_for :users
 
-  namespace :admin do
-    resources :users
+  constraints(ClientDomainConstraint.new) do
+    resources :posts do
+      resources :comments, except: :show
+    end
+  end
+
+  constraints(AdminDomainConstraint.new) do
+    namespace :admin do
+      resources :users
+    end
   end
 end
